@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">WeatherApp</string>
     <string name="action_settings">Settings</string>
+    <string name="cityTextView">Enter city name</string>
     <string name="searchButton">Search</string>
     <string name="weatherImage">Image</string>
     <string name="tempTextView">Air temperature</string>

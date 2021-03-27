@@ -4,6 +4,8 @@ using Android.Support.V7.App;
 using Android.Runtime;
 using Android.Widget;
 using WeatherApp.Services;
+using WeatherApp.Models;
+using System.Collections.Generic;
 
 namespace WeatherApp
 {
@@ -23,24 +25,29 @@ namespace WeatherApp
             var tempTextView = FindViewById<TextView>(Resource.Id.tempTextView);
             var weatherImage = FindViewById<ImageView>(Resource.Id.weatherImage);
             var feelsLikeTextView = FindViewById<TextView>(Resource.Id.feelsLikeTextView);
+            var listView = FindViewById<ListView>(Resource.Id.tempListView);
 
             searchButton.Click += async delegate
             {
                 var city = cityEditText.Text.Trim();
-                if(city != "")
+                if (city != "")
                 {
                     var data = await dataService.GetCityWeather(city);
+                    var futureData = await dataService.GetCityFutureWeather(city);
 
                     tempTextView.Text = $"Air temperature {data.main.temp.ToString()} °C";
                     using (var bm = await dataService.GetImageFromUrl($"https://openweathermap.org/img/wn/{data.weather[0].icon}@2x.png"))
-                    weatherImage.SetImageBitmap(bm);
+                        weatherImage.SetImageBitmap(bm);
                     feelsLikeTextView.Text = $"Feels like {data.main.feels_like.ToString()} °C";
+
+                    listView.Adapter = new FutureWeatherInfoAdapter(this, futureData.list);
                 }
 
             };
 
 
         }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

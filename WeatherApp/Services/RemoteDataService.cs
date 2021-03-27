@@ -62,5 +62,20 @@ namespace WeatherApp.Services
                 throw new Exception((int)response.StatusCode + "-" + response.StatusCode.ToString()); // How to handle this exception? City not found
             }
         }
+        public async Task<FutureWeatherInfo.Root> GetCityFutureWeather(string city)
+        {
+            var client = new HttpClient();
+            var response = await client.GetAsync($"https://api.openweathermap.org/data/2.5/forecast?q={city}&units=metric&appid={Constants.ApiKey}");
+            if (response.IsSuccessStatusCode)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                var a = JsonConvert.DeserializeObject<FutureWeatherInfo.Root>(content);
+                return a;
+            }
+            else
+            {
+                throw new Exception((int)response.StatusCode + "-" + response.StatusCode.ToString()); // How to handle this exception? City not found
+            }
+        }
     }
 }
