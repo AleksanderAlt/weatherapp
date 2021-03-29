@@ -43,6 +43,7 @@ namespace WeatherApp
             View view = convertView;
             if (view == null)
                 view = _context.LayoutInflater.Inflate(Resource.Layout.weather_row_layout, null);
+            view.FindViewById<TextView>(Resource.Id.futureDateTextView).Text = _items[position].dt_txt;
             view.FindViewById<TextView>(Resource.Id.futureTempTextView).Text = $"Air {_items[position].main.temp.ToString()} °C";
             view.FindViewById<TextView>(Resource.Id.futureFeelsLikeTextView).Text = $"Feels like {_items[position].main.feels_like.ToString()} °C";
 
