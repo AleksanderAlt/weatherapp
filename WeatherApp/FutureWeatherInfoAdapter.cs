@@ -45,7 +45,6 @@ namespace WeatherApp
                 view = _context.LayoutInflater.Inflate(Resource.Layout.weather_row_layout, null);
             view.FindViewById<TextView>(Resource.Id.futureTempTextView).Text = $"Air {_items[position].main.temp.ToString()} °C";
             view.FindViewById<TextView>(Resource.Id.futureFeelsLikeTextView).Text = $"Feels like {_items[position].main.feels_like.ToString()} °C";
-            //view.FindViewById<ImageView>(Resource.Id.weatherImageView).SetImageResource(_items[position].weather.icon);
 
             var weatherImage = view.FindViewById<ImageView>(Resource.Id.weatherImageView);
             var imageName = _items[position].weather[0].icon;
