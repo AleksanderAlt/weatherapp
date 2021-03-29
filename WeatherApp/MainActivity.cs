@@ -41,6 +41,12 @@ namespace WeatherApp
                     feelsLikeTextView.Text = $"Feels like {data.main.feels_like.ToString()} °C";
 
                     listView.Adapter = new FutureWeatherInfoAdapter(this, futureData.list);
+
+                    listView.ItemClick += delegate (object sender, AdapterView.ItemClickEventArgs args)
+                    {
+                        var desc = futureData.list[args.Position].weather[0].description.ToString();
+                        Toast.MakeText(this, desc, ToastLength.Long).Show();
+                    };
                 }
 
             };
