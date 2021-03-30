@@ -6,6 +6,7 @@ using Android.Widget;
 using WeatherApp.Services;
 using WeatherApp.Models;
 using System.Collections.Generic;
+using Android.Views;
 
 namespace WeatherApp
 {
@@ -32,25 +33,32 @@ namespace WeatherApp
                 var city = cityEditText.Text.Trim();
                 if (city != "")
                 {
-                    var data = await dataService.GetCityWeather(city);
-                    var futureData = await dataService.GetCityFutureWeather(city);
-
-                    tempTextView.Text = $"Air temperature {data.main.temp.ToString()} °C";
-                    using (var bm = await dataService.GetImageFromUrl($"https://openweathermap.org/img/wn/{data.weather[0].icon}@2x.png"))
-                        weatherImage.SetImageBitmap(bm);
-                    feelsLikeTextView.Text = $"Feels like {data.main.feels_like.ToString()} °C";
-
-                    listView.Adapter = new FutureWeatherInfoAdapter(this, futureData.list);
-
-                    listView.ItemClick += delegate (object sender, AdapterView.ItemClickEventArgs args)
+                    try
                     {
-                        var desc = futureData.list[args.Position].weather[0].description.ToString();
-                        Toast.MakeText(this, desc, ToastLength.Long).Show();
-                    };
+                        var data = await dataService.GetCityWeather(city);
+                        var futureData = await dataService.GetCityFutureWeather(city);
+
+                        tempTextView.Text = $"Air temperature {data.main.temp.ToString()} °C";
+                        using (var bm = await dataService.GetImageFromUrl($"https://openweathermap.org/img/wn/{data.weather[0].icon}@2x.png"))
+                            weatherImage.SetImageBitmap(bm);
+                        feelsLikeTextView.Text = $"Feels like {data.main.feels_like.ToString()} °C";
+
+                        listView.Adapter = new FutureWeatherInfoAdapter(this, futureData.list);
+
+                        listView.ItemClick += delegate (object sender, AdapterView.ItemClickEventArgs args)
+                        {
+                            var desc = futureData.list[args.Position].weather[0].description.ToString();
+                            Toast.MakeText(this, desc, ToastLength.Long).Show();
+                        };
+                    }
+                    catch
+                    {
+                        Toast toast = Toast.MakeText(this, "Enter correct city name", ToastLength.Long);
+                        toast.SetGravity(GravityFlags.Center, 0, 0);
+                        toast.Show();
+                    }
                 }
-
             };
-
 
         }
 
