@@ -1,16 +1,6 @@
-﻿using Android.App;
-using Android.Content;
-using Android.Graphics;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using WeatherApp.Models;
 
@@ -29,21 +19,18 @@ namespace WeatherApp.Services
             }
             else
             {
-                throw new Exception((int)response.StatusCode + "-" + response.StatusCode.ToString()); // How to handle this exception? City not found
+                throw new Exception((int)response.StatusCode + "-" + response.StatusCode.ToString());
             }
         }
-        public async Task<Bitmap> GetImageFromUrl(string url)
+        public async Task<byte[]> GetImageFromUrl(string url)
         {
             using (var client = new HttpClient())
             {
                 var msg = await client.GetAsync(url);
                 if (msg.IsSuccessStatusCode)
                 {
-                    using (var stream = await msg.Content.ReadAsStreamAsync())
-                    {
-                        var bitmap = await BitmapFactory.DecodeStreamAsync(stream);
-                        return bitmap;
-                    }
+                    var byteArray = await msg.Content.ReadAsByteArrayAsync();
+                    return byteArray;
                 }
             }
             return null;
@@ -59,7 +46,7 @@ namespace WeatherApp.Services
             }
             else
             {
-                throw new Exception((int)response.StatusCode + "-" + response.StatusCode.ToString()); // How to handle this exception? City not found
+                throw new Exception((int)response.StatusCode + "-" + response.StatusCode.ToString());
             }
         }
         public async Task<FutureWeatherInfo.Root> GetCityFutureWeather(string city)
@@ -74,7 +61,7 @@ namespace WeatherApp.Services
             }
             else
             {
-                throw new Exception((int)response.StatusCode + "-" + response.StatusCode.ToString()); // How to handle this exception? City not found
+                throw new Exception((int)response.StatusCode + "-" + response.StatusCode.ToString());
             }
         }
     }

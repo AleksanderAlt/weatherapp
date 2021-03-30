@@ -4,9 +4,8 @@ using Android.Support.V7.App;
 using Android.Runtime;
 using Android.Widget;
 using WeatherApp.Services;
-using WeatherApp.Models;
-using System.Collections.Generic;
 using Android.Views;
+using Android.Graphics;
 
 namespace WeatherApp
 {
@@ -39,8 +38,9 @@ namespace WeatherApp
                         var futureData = await dataService.GetCityFutureWeather(city);
 
                         tempTextView.Text = $"Air temperature {data.main.temp.ToString()} °C";
-                        using (var bm = await dataService.GetImageFromUrl($"https://openweathermap.org/img/wn/{data.weather[0].icon}@2x.png"))
-                            weatherImage.SetImageBitmap(bm);
+                        var bm = await dataService.GetImageFromUrl($"https://openweathermap.org/img/wn/{data.weather[0].icon}@2x.png");
+                        var bitmap = await BitmapFactory.DecodeByteArrayAsync(bm, 0, bm.Length);
+                            weatherImage.SetImageBitmap(bitmap);
                         feelsLikeTextView.Text = $"Feels like {data.main.feels_like.ToString()} °C";
 
                         listView.Adapter = new FutureWeatherInfoAdapter(this, futureData.list);
@@ -59,7 +59,6 @@ namespace WeatherApp
                     }
                 }
             };
-
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
